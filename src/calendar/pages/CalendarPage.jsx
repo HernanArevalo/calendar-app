@@ -1,5 +1,9 @@
+import { NavBar } from '../'
+
 export const CalendarPage = () => {
   return (
-    <div>CalendarPage</div>
+    <>
+      <NavBar />
+    </>
   )
 }
