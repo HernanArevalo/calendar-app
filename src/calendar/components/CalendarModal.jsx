@@ -1,10 +1,14 @@
 import { useState } from 'react';
-import { addHours } from 'date-fns';
+import { addHours, differenceInSeconds } from 'date-fns';
 
 import Modal from 'react-modal';
-import DatePicker from "react-datepicker";
+import DatePicker, { registerLocale }  from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
+import { es } from 'date-fns/locale';
+registerLocale('es',es);
+
+
 
 const customStyles = {
 	content: {
@@ -25,7 +29,7 @@ export const CalendarModal = () => {
     title: 'Fernando',
     notes: 'Herrera',
     start: new Date(),
-    end: addHours( new Date(), 2),
+    end: addHours( new Date(), 1),
 
   })
 
@@ -37,7 +41,10 @@ export const CalendarModal = () => {
   }
 
   const onDateChange = ( event, changing ) => {
-
+    setFormValues({
+      ...formValues,
+      [changing]: event
+    })
   }
 
 	const [isModalOpen, setIsModalOpen] = useState( true )
@@ -46,6 +53,27 @@ export const CalendarModal = () => {
 		console.log('cerrando modal');
 		setIsModalOpen(false)
 	}
+
+  const onSubmit = (event) => {
+    event.preventDefault();
+
+    const difference = differenceInSeconds(formValues.end, formValues.start);
+
+    if ( isNaN(difference) || difference < 0 ) {
+      console.log('Error en fechas')
+      return; 
+    }
+
+    if (formValues.title.length <= 0 ) return;
+
+    console.log(formValues);
+
+    // TODO:
+    //cerrar modal
+    // remover errores de pantalla 
+
+  }
+
 	
   return (
     <Modal
@@ -59,6 +87,7 @@ export const CalendarModal = () => {
 	  >
       <h1> Nuevo evento </h1>
       <hr />
+        <form className="container" onSubmit={onSubmit}>
         <div className="form-group mb-2">
           <label>Titulo y notas</label>
           <input 
@@ -86,21 +115,35 @@ export const CalendarModal = () => {
           ></textarea>
           <small id="emailHelp" className="form-text text-muted">Información adicional</small>
         </div>
-      <form className="container">
 
         <div className="form-group mb-2">
           <label>Fecha y hora inicio</label>
           <br/>
           <DatePicker 
             selected={ formValues.start }
-            onChange={ (event) => onch }
+            onChange={ (event) => onDateChange(event, 'start') }
             className='form-control'
+            dateFormat="Pp"
+            locale="es"
+            timeCaption='Hora'
+            showTimeSelect
           />
         </div>
 
         <div className="form-group mb-2">
           <label>Fecha y hora fin</label>
-          <input className="form-control" placeholder="Fecha fin" />
+          <br/>
+          <DatePicker
+            minDate={ formValues.start }
+            selected={ formValues.end }
+            onChange={ (event) => onDateChange(event, 'end') }
+            className='form-control'
+            dateFormat="Pp"
+            locale="es"
+            timeCaption='Hora'
+            showTimeSelect
+
+          />
         </div>
 
         <hr />
