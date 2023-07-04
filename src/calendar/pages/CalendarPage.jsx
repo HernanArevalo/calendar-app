@@ -7,6 +7,7 @@ import { addHours } from 'date-fns';
 import { CalendarEvent, CalendarModal, NavBar } from '../'
 
 import { getMessagesES, localizer } from '../../helpers'
+import { useUiStore } from '../../hooks';
 
 
 
@@ -25,7 +26,8 @@ import { getMessagesES, localizer } from '../../helpers'
 
 export const CalendarPage = () => {
 
-  const [lastView, setLastView] = useState( localStorage.getItem('lastView') || 'week')
+  const { openDateModal } = useUiStore();
+  const [lastView, setLastView] = useState( localStorage.getItem('lastView') || 'week');
 
   const eventStyleGetter = ( event, start, end, isSelected ) => {
 
@@ -40,10 +42,10 @@ export const CalendarPage = () => {
   }
 
   const onDoubleClick = ( event ) => {
-    console.log({ onDoubleClick: event });
+    openDateModal();
   }
   const onSelect = ( event ) => {
-    console.log({ click: event });
+
   }
   const onViewChanged = ( event ) => {
     localStorage.setItem('lastView', event);
