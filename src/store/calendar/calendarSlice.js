@@ -3,6 +3,7 @@ import { addHours } from 'date-fns';
 
 const tempEvent = 
     {
+        _id: new Date().getTime(),
         title: 'Cumple',
         notes: 'Comprar pastel',
         start: new Date(),
@@ -15,7 +16,6 @@ const tempEvent =
     };
 
 
-
 export const calendarSlice = createSlice({
     name: 'calendar',
     initialState: {
@@ -25,12 +25,12 @@ export const calendarSlice = createSlice({
         activeEvent: null
     },
     reducers: {
-        increment: (state, /* action */ ) => {
-            state.counter += 1;
-        },
+        onSetActiveEvent: (state, { payload }) => {
+            state.activeEvent = payload;
+        }
     }
 });
 
 
 // Action creators are generated for each case reducer function
-export const { increment } = calendarSlice.actions;
+export const { onSetActiveEvent } = calendarSlice.actions;
