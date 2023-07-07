@@ -8,7 +8,7 @@ export const useCalendarStore = () => {
   const { events, activeEvent } = useSelector(state => state.calendar)
 
   const setActiveEvent = (calendarEvent) => {
-    dispatch( onSetActiveEvent(calendarEvent) )
+    dispatch( onSetActiveEvent(calendarEvent) );
   }
 
 
