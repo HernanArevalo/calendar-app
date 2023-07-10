@@ -30,7 +30,7 @@ Modal.setAppElement('#root');
 
 export const CalendarModal = () => {
 
-  const { activeEvent } = useCalendarStore();
+  const { activeEvent, startSavingEvent } = useCalendarStore();
 
   const { isDateModalOpen, closeDateModal } = useUiStore();
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -77,7 +77,7 @@ export const CalendarModal = () => {
 
   }
 
-  const onSubmit = (event) => {
+  const onSubmit = async(event) => {
     event.preventDefault();
     setFormSubmitted(true);
 
@@ -91,11 +91,11 @@ export const CalendarModal = () => {
 
     if (formValues.title.length <= 0 ) return;
 
-    console.log(formValues);
-
     // TODO:
-    //cerrar modal
-    // remover errores de pantalla 
+    await startSavingEvent( formValues );
+
+    closeDateModal();
+    setFormSubmitted(false);
 
   }
 
@@ -121,7 +121,7 @@ export const CalendarModal = () => {
             placeholder="Título del evento"
             name="title"
             autoComplete="off"
-            value={ formValues.title }
+            value={ formValues.title || ''}
             onChange={ onInputChange }
           />
           <small id="emailHelp" className="form-text text-muted">Una descripción corta</small>
@@ -134,7 +134,7 @@ export const CalendarModal = () => {
             placeholder="Notas"
             rows="5"
             name="notes"
-            value={ formValues.notes }
+            value={ formValues.notes || ''}
             onChange={ onInputChange }
 
           ></textarea>
@@ -159,8 +159,8 @@ export const CalendarModal = () => {
           <label>Fecha y hora fin</label>
           <br/>
           <DatePicker
-            minDate={ formValues.start }
             selected={ formValues.end }
+            minDate={ formValues.start }
             onChange={ (event) => onDateChange(event, 'end') }
             className='form-control'
             dateFormat="Pp"
