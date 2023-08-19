@@ -112,7 +112,7 @@ export const CalendarModal = () => {
 	  >
       <h1> Nuevo evento </h1>
       <hr />
-        <form className="container" onSubmit={onSubmit}>
+        <form className="container" onSubmit={ onSubmit }>
         <div className="form-group mb-2">
           <label>Titulo y notas</label>
           <input 
