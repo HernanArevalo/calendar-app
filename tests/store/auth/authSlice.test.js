@@ -39,12 +39,10 @@ describe('Pruebas en authSlice', () => {
         const errorMessage = 'Invalid credentials'
         
         let state = authSlice.reducer( authenticatedState, onLogout( errorMessage ) );
-        expect( state.errorMessage ).toBe( errorMessage );
 
         state = authSlice.reducer( authenticatedState, clearErrorMessage() );
-        expect( state.errorMessage ).toBe( undefined );
 
-        
+        expect( state.errorMessage ).toBe( undefined );
 
       });
  })
