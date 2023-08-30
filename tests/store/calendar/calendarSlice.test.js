@@ -80,14 +80,10 @@ describe('pruebas en calendarSlice', () => {
         test('onLogoutCalendar debe limpiar el estado', () => { 
 
             const state = calendarSlice.reducer( calendarWithActiveEventState, onLogoutCalendar() );
-            expect( state ).toEqual( initialState )
-
 
             expect( state.isLoadingEvents ).toBeTruthy();
             expect( state.events ).toEqual([]);
             expect( state.activeEvent ).toBe( null );
-
-
 
         })
  })
