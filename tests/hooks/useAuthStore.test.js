@@ -5,6 +5,7 @@ import { Provider } from "react-redux"
 import { useAuthStore } from "../../src/hooks/useAuthStore"
 import { initialState, notAuthenticatedState } from "../fixtures/authStates"
 import { testUserCredentials } from "../fixtures/testUser"
+import { calendarApi } from "../../src/api"
 
 
 const getMockStore = ( initialState ) => {
@@ -19,6 +20,9 @@ const getMockStore = ( initialState ) => {
 }
 
 describe('Pruebas en useAuthStore', () => {
+
+    beforeEach(() => localStorage.clear() );
+
 
     test('Debe regresar los valores por defecto', () => {
 
@@ -44,7 +48,6 @@ describe('Pruebas en useAuthStore', () => {
 
     
     test('startLogin debe realizar el login correctamente', async() => { 
-        localStorage.clear();
 
         const mockStore = getMockStore({ ...notAuthenticatedState })
     
@@ -73,7 +76,6 @@ describe('Pruebas en useAuthStore', () => {
 
 
     test('startLogin debe fallar la autenticacion', async() => {
-        localStorage.clear();
 
         const mockStore = getMockStore({ ...notAuthenticatedState })
     
@@ -100,6 +102,57 @@ describe('Pruebas en useAuthStore', () => {
 
         expect( localStorage.getItem('token')).toBe( null );
         expect( localStorage.getItem('token-init-date')).toBe( null );
+
+    })
+
+
+    test('startRegister debe crear un usuario', async() => {
+
+        const newUser= {email: 'algo@gmail.com', password: '123456', name: 'Test User Register'};
+
+        const mockStore = getMockStore({ ...notAuthenticatedState });
+    
+        const {result} = renderHook( () => useAuthStore(), {
+            wrapper: ({children}) => <Provider store={ mockStore }>{children}</Provider>
+        });
+
+        const spy = jest.spyOn( calendarApi, 'post' ).mockReturnValue({
+            data: {
+                ok: true,
+                uid: "123456789",
+                name: "Register User",
+                token: "SOME-TOKEN"
+            }
+        });
+
+        await act( async() => {
+            await result.current.startRegister( newUser );
+        });
+
+        const { errorMessage, status, user } = result.current;
+
+        spy.mockRestore();
+    })
+
+    test('startRegister debe fallar el registro', async() => {
+
+        const mockStore = getMockStore({ ...notAuthenticatedState });
+    
+        const {result} = renderHook( () => useAuthStore(), {
+            wrapper: ({children}) => <Provider store={ mockStore }>{children}</Provider>
+        });
+
+        await act( async() => {
+            await result.current.startRegister( testUserCredentials );
+        });
+
+        const { errorMessage, status, user } = result.current;
+
+        expect({ errorMessage, status, user }).toEqual({
+            errorMessage: expect.any(String),
+            status: 'not-authenticated',
+            user: {}
+          })
 
     })
 
