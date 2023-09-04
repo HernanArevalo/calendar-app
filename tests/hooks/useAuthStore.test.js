@@ -200,11 +200,11 @@ describe('Pruebas en useAuthStore', () => {
 
         console.log({ errorMessage, status, user })
 
-        // expect({ errorMessage, status, user }).toEqual({
-        //     errorMessage: undefined,
-        //     status: 'not-authenticated',
-        //     user: {}
-        // })
+        expect({ errorMessage, status, user }).toEqual({
+            errorMessage: undefined,
+            status: 'authenticated',
+            user: { name: 'Test User', uid: '64f3b14f4c65837c0e6aa02f' }
+        })
 
     })
 
