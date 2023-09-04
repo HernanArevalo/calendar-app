@@ -28,10 +28,9 @@ export const useAuthStore = () => {
                 dispatch( clearErrorMessage() );
             }, 50);
 
-        }
+        };
+    };
 
-
-    }
 
     const startRegister = async({ name, email, password, password2 }) => {
         dispatch( onChecking() );
@@ -52,9 +51,8 @@ export const useAuthStore = () => {
                 dispatch( clearErrorMessage() );
             }, 50);
 
-        }
-
-    }
+        };
+    };
 
     const checkAuthToken = async() => {
         const token = localStorage.getItem('token');
@@ -72,9 +70,9 @@ export const useAuthStore = () => {
         } catch (error) {
             localStorage.clear();
             dispatch( onLogout() );
-        }
+        };
+    };
 
-    }
 
     const startLogout = () => {
         localStorage.clear();
