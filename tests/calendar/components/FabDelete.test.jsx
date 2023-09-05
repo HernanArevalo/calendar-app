@@ -1,18 +1,61 @@
-import { render, screen } from "@testing-library/react"
+import { fireEvent, render, screen } from "@testing-library/react"
 import { FabDelete } from "../../../src/calendar/components/FabDelete"
-import { store } from "../../../src/store";
-import { Provider } from "react-redux";
+import { useCalendarStore } from "../../../src/hooks";
+
+jest.mock('../../../src/hooks/useCalendarStore')
+
 
 describe('Pruebas de <FabDelete />', () => { 
    
-    test('should debe mostrar el componente correctamente', () => { 
-    
-        render( 
-        <Provider store={store}>
-            <FabDelete /> 
-        </Provider>
+    const mockstartDeletingEvent = jest.fn();
 
-        );
-        screen.debug();
-    })
- })
+    beforeEach( () => jest.clearAllMocks() );
+
+    test('Debe mostrar el componente correctamente', () => { 
+    
+        useCalendarStore.mockReturnValue({
+            hasEventSelected: false
+        });
+
+        render( <FabDelete /> );
+
+        const btn = screen.getByLabelText('btn-delete');
+
+        expect(btn.classList).toContain('btn');
+        expect(btn.classList).toContain('btn-danger');
+        expect(btn.classList).toContain('fab-danger');
+
+    });
+
+
+    test('Debe activar el botón con un evento activo', () => { 
+    
+        useCalendarStore.mockReturnValue({
+            hasEventSelected: true
+        })
+
+        render( <FabDelete /> );
+
+        const btn = screen.getByLabelText('btn-delete');
+
+        expect(btn.disabled).toBe(false);
+
+    });
+
+    test('Debe llamar startDeletingEvent si hay evento activo', () => { 
+    
+        useCalendarStore.mockReturnValue({
+            hasEventSelected: true,
+            startDeletingEvent: mockstartDeletingEvent
+        });
+
+        render( <FabDelete /> );
+        const btn = screen.getByLabelText('btn-delete');
+
+        fireEvent.click( btn );
+
+        expect( mockstartDeletingEvent ).toHaveBeenCalled()
+
+    });
+
+ });
