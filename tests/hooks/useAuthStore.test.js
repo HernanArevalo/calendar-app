@@ -198,8 +198,6 @@ describe('Pruebas en useAuthStore', () => {
 
         const { errorMessage, status, user } = result.current;
 
-        console.log({ errorMessage, status, user })
-
         expect({ errorMessage, status, user }).toEqual({
             errorMessage: undefined,
             status: 'authenticated',
