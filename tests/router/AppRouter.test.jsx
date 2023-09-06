@@ -64,9 +64,7 @@ describe('Pruebas en AppRouter', () => {
 
         expect( screen.getByText('CalendarPage') ).toBeTruthy();
 
-        screen.debug();
-
-    })
+    });
 
 
-})
+});
